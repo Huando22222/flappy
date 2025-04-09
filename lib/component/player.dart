@@ -2,12 +2,17 @@ import 'dart:async';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame_bloc/flame_bloc.dart';
+import 'package:flappy/bloc/game_status_bloc.dart';
+import 'package:flappy/bloc/game_status_state.dart';
 import 'package:flappy/component/ground.dart';
 import 'package:flappy/component/pipe.dart';
 import 'package:flappy/game_play.dart';
 import 'package:flappy/value.dart';
 
-class Player extends SpriteComponent
+class Player extends
+// SpriteComponent
+    SpriteAnimationComponent
     with CollisionCallbacks, HasGameReference<GamePlay> {
   Player()
       : super(
@@ -20,24 +25,43 @@ class Player extends SpriteComponent
 
   @override
   FutureOr<void> onLoad() async {
-    sprite = await Sprite.load('player.png');
-    size *= 0.18;
+    if (game.gameStatusBloc.state.gameMode == GameMode.normal) {
+      animation = await game.loadSpriteAnimation(
+        'animated_bird.png',
+        SpriteAnimationData.sequenced(
+          amount: 3,
+          stepTime: 0.1,
+          textureSize: Vector2(34, 24),
+        ),
+      );
 
-    add(
-      PolygonHitbox(
-        [
-          Vector2(size.x * 0.15, size.y * 0.5),
-          Vector2(size.x * 0.15, 0),
-          Vector2(size.x * 0.25, 0),
-          Vector2(size.x * 0.35, size.y * 0.5),
-          Vector2(size.x * 0.90, size.y * 0.5),
-          Vector2(size.x, size.y * 0.7),
-          Vector2(size.x * 0.9, size.y),
-          Vector2(size.x * 0.3, size.y),
-          Vector2(0, size.y * 0.7),
-        ],
-      ),
-    );
+      add(CircleHitbox());
+    } else {
+      animation = await game.loadSpriteAnimation(
+        'player2.png',
+        SpriteAnimationData.sequenced(
+          amount: 1,
+          stepTime: 1,
+          textureSize: Vector2(78, 40),
+        ),
+      );
+      add(
+        PolygonHitbox(
+          [
+            Vector2(size.x * 0.15, size.y * 0.5),
+            Vector2(size.x * 0.15, 0),
+            Vector2(size.x * 0.25, 0),
+            Vector2(size.x * 0.35, size.y * 0.5),
+            Vector2(size.x * 0.90, size.y * 0.5),
+            Vector2(size.x, size.y * 0.7),
+            Vector2(size.x * 0.9, size.y),
+            Vector2(size.x * 0.3, size.y),
+            Vector2(0, size.y * 0.7),
+          ],
+        ),
+      );
+    }
+
     debugMode = true;
     return super.onLoad();
   }

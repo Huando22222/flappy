@@ -36,6 +36,7 @@ dependencies:
     equatable: ^2.0.5
     flame_bloc: ^1.12.10
     flutter_bloc: ^8.1.2
+    sprite: ^0.0.3
 dev_dependencies:
     flutter_test:
         sdk: flutter

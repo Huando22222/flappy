@@ -28,6 +28,7 @@ class _GameOverOverlayState extends State<GameOverOverlay> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return AnimatedOpacity(
       onEnd: () {
         if (_opacity == 0.0) {
@@ -40,8 +41,15 @@ class _GameOverOverlayState extends State<GameOverOverlay> {
         color: Colors.black.withAlpha(150),
         alignment: Alignment.center,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [],
+          children: [
+            Image.asset(
+              "assets/images/game_over.png",
+              width: size.width * 0.5,
+              fit: BoxFit.fitWidth,
+            ),
+          ],
         ),
       ),
     );

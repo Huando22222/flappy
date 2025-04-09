@@ -43,14 +43,4 @@ class ScoreText extends TextComponent
 
     return super.onLoad();
   }
-
-  // @override
-//   void update(double dt) {
-//     text = state!.score.toString();
-//     // final newText = game.score.toString();
-//     // if (text != newText) {
-//     //   text = newText;
-//     // }
-//     super.update(dt);
-//   }
 }
