@@ -7,7 +7,8 @@ import 'package:flappy/component/pipe.dart';
 import 'package:flappy/game_play.dart';
 import 'package:flappy/value.dart';
 
-class Player extends SpriteComponent with CollisionCallbacks {
+class Player extends SpriteComponent
+    with CollisionCallbacks, HasGameReference<GamePlay> {
   Player()
       : super(
           position: Vector2(100, 100),
@@ -64,11 +65,11 @@ class Player extends SpriteComponent with CollisionCallbacks {
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     if (other is Ground) {
-      (parent as GamePlay).gameOver();
+      game.gameOver();
     }
 
     if (other is Pipe) {
-      (parent as GamePlay).gameOver();
+      game.gameOver();
     }
     super.onCollision(intersectionPoints, other);
   }

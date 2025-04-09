@@ -1,10 +1,16 @@
 import 'dart:async';
 
 import 'package:flame/components.dart';
+import 'package:flame_bloc/flame_bloc.dart';
+import 'package:flappy/bloc/game_status_bloc.dart';
+import 'package:flappy/bloc/game_status_state.dart';
 import 'package:flappy/game_play.dart';
 import 'package:flutter/material.dart';
 
-class ScoreText extends TextComponent with HasGameReference<GamePlay> {
+class ScoreText extends TextComponent
+    with
+        HasGameReference<GamePlay>,
+        FlameBlocListenable<GameStatusBloc, GameStatusState> {
   ScoreText()
       : super(
           text: "0",
@@ -20,6 +26,16 @@ class ScoreText extends TextComponent with HasGameReference<GamePlay> {
 
   @override
   FutureOr<void> onLoad() {
+    add(FlameBlocListener<GameStatusBloc, GameStatusState>(
+      listenWhen: (previousState, newState) {
+        return previousState.score != newState.score;
+        // return newState.status == GameStatus.play;
+      },
+      onNewState: (state) {
+        text = state.score.toString();
+      },
+    ));
+
     position = Vector2(
       (game.size.x - size.x) / 2,
       game.size.y - (game.ground.size.y - size.y) / 2,
@@ -28,12 +44,13 @@ class ScoreText extends TextComponent with HasGameReference<GamePlay> {
     return super.onLoad();
   }
 
-  @override
-  void update(double dt) {
-    final newText = game.score.toString();
-    if (text != newText) {
-      text = newText;
-    }
-    super.update(dt);
-  }
+  // @override
+//   void update(double dt) {
+//     text = state!.score.toString();
+//     // final newText = game.score.toString();
+//     // if (text != newText) {
+//     //   text = newText;
+//     // }
+//     super.update(dt);
+//   }
 }
