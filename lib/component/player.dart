@@ -92,6 +92,8 @@ class Player extends
     angle = (velocity / 500).clamp(-0.5, 0.5);
     handleScreenBounds();
     super.update(dt);
+
+    if(position.y > game.ground.position.y){game.gameStatusBloc.add(StatusEventChange(status: GameStatus.gameOver));}
   }
 
   void handleScreenBounds() {

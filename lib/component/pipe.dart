@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math' show pi;
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flappy/component/audio_manager.dart';
 import 'package:flappy/game_play.dart';
 import 'package:flappy/value.dart';
 
@@ -50,6 +51,7 @@ class Pipe extends PositionComponent
       if (!isScored && position.x < game.player!.x) {
         isScored = true;
         if (!isTopPipe) {
+          game.audioManager.playSfx(key: AudioKey.point);
           game.increaseScore();
         }
       }

@@ -31,10 +31,8 @@ class GameStatusController extends PreservedComponent
             },
             onNewState: (state) {
               if (state.status == GameStatus.gameOver) {
-                //
                 game.pauseEngine();
                 game.overlays.add('menu');
-                // game.overlays.add('gameOver');
               } else if (state.status == GameStatus.play) {
                 game.overlays.removeAll(['gameOver', 'menu']);
                 game.onNewGame();
@@ -107,7 +105,7 @@ class GamePlay extends FlameGame with TapDetector, HasCollisionDetection {
   void onTap() {
     if (paused) return;
     player?.jump();
-    audioManager.playSfx(key: AudioKey.swooshing);
+    audioManager.playSfx(key: AudioKey.wing);
     super.onTap();
   }
 

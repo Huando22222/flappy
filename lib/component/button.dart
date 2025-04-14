@@ -1,5 +1,6 @@
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
+import 'package:flappy/component/audio_manager.dart';
 import 'package:flappy/game_play.dart';
 
 class PauseButtonComponent extends SpriteComponent
@@ -15,6 +16,7 @@ class PauseButtonComponent extends SpriteComponent
 
   @override
   void onTapDown(TapDownEvent event) {
+    game.audioManager.playSfx(key: AudioKey.click);
     if (game.paused) {
       game.resumeEngine();
     } else {
