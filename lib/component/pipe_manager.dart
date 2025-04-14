@@ -20,10 +20,10 @@ class PipeManager extends Component with HasGameReference<GamePlay> {
 
   void spawnPipe() {
     final double groundHeight = game.ground.size.y;
-    // final double groundHeight = game.ground.y;
     final double screenHeight = game.size.y;
-    final double pipeWidth = game.size.x * 0.2;
-    final double pipeGap = game.size.y * 0.2;
+    final double pipeWidth = 36;
+    // final double pipeWidth = game.size.x * 0.2;
+    final double pipeGap = game.gameStatusBloc.state.pipeGap.toDouble();
     final double minPipeHeight = 50;
 
     final double maxPipeHeight =
@@ -48,5 +48,9 @@ class PipeManager extends Component with HasGameReference<GamePlay> {
 
     game.add(bottomPipe);
     game.add(topPipe);
+  }
+
+  void removeAllPipes() {
+    game.children.whereType<Pipe>().forEach((pipe) => pipe.removeFromParent());
   }
 }

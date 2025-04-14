@@ -1,5 +1,11 @@
+import 'dart:developer';
+
+import 'package:flappy/bloc/game_status_bloc.dart';
+import 'package:flappy/bloc/game_status_event.dart';
+import 'package:flappy/bloc/game_status_state.dart';
 import 'package:flappy/game_play.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class GameOverOverlay extends StatefulWidget {
   final GamePlay gameRef;
@@ -48,6 +54,28 @@ class _GameOverOverlayState extends State<GameOverOverlay> {
               "assets/images/game_over.png",
               width: size.width * 0.5,
               fit: BoxFit.fitWidth,
+            ),
+            GestureDetector(
+              onTap: () {
+                context
+                    .read<GameStatusBloc>()
+                    .add(StatusEventChange(status: GameStatus.play));
+              },
+              child: Image.asset(
+                "assets/images/play_icon.png",
+                width: 100,
+                fit: BoxFit.cover,
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                log(context.read<GameStatusBloc>().state.status.name);
+              },
+              child: Image.asset(
+                "assets/images/play_icon.png",
+                width: 100,
+                fit: BoxFit.cover,
+              ),
             ),
           ],
         ),

@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:math' show pi;
 
 import 'package:flappy/bloc/game_status_bloc.dart';
@@ -41,7 +42,7 @@ class MenuOverlay extends StatelessWidget {
                         onTap: () {
                           context
                               .read<GameStatusBloc>()
-                              .add(ModeEventChange(GameMode.normal));
+                              .add(ModeEventChange(GameMode.blueBird));
                         },
                         child: Transform(
                           transform: Matrix4.identity()..rotateY(pi),
@@ -54,9 +55,9 @@ class MenuOverlay extends StatelessWidget {
                           ),
                         ),
                       ),
-                      if (state.gameMode == GameMode.range)
+                      if (state.gameMode == GameMode.plane)
                         Image.asset(
-                          "assets/images/player2.png",
+                          "assets/images/players/player2.png",
                           width: size.width * 0.4,
                           fit: BoxFit.fitWidth,
                         )
@@ -66,13 +67,13 @@ class MenuOverlay extends StatelessWidget {
                           size: Size(34, 24),
                           stepTime: 200,
                           amount: 3,
-                          imagePath: 'assets/images/animated_bird.png',
+                          imagePath: 'assets/images/players/animated_bird.png',
                         ),
                       GestureDetector(
                         onTap: () {
                           context
                               .read<GameStatusBloc>()
-                              .add(ModeEventChange(GameMode.range));
+                              .add(ModeEventChange(GameMode.plane));
                         },
                         child: Image.asset(
                           "assets/images/arrow_forward_icon.png",
@@ -86,10 +87,10 @@ class MenuOverlay extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    gameRef.overlays.remove('menu');
+                    // gameRef.overlays.remove('menu');
                     context
                         .read<GameStatusBloc>()
-                        .add(StatusEventChange(GameStatus.play));
+                        .add(StatusEventChange(status: GameStatus.play));
                   },
                   child: Image.asset(
                     "assets/images/play_icon.png",

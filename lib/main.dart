@@ -57,7 +57,7 @@ class _GameScreenState extends State<GameScreen> {
             GameOverOverlay(gameRef: game as GamePlay),
         'menu': (context, game) => MenuOverlay(gameRef: game as GamePlay),
       },
-      initialActiveOverlays: const ['gameOver'],
+      initialActiveOverlays: const ['menu'],
     );
   }
 }

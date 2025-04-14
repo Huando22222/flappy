@@ -23,8 +23,15 @@ class ModeEventChange extends GameStatusEvent {
 
 class StatusEventChange extends GameStatusEvent {
   final GameStatus status;
-  const StatusEventChange(this.status);
+  const StatusEventChange({required this.status});
 
   @override
   List<Object?> get props => [status];
+}
+
+class TestEvent extends GameStatusEvent {
+  final int pipeGap;
+  const TestEvent({required this.pipeGap});
+  @override
+  List<Object?> get props => [pipeGap];
 }

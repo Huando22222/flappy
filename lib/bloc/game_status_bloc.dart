@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:flappy/bloc/game_status_event.dart';
 import 'package:flappy/bloc/game_status_state.dart';
+import 'package:flappy/value.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class GameStatusBloc extends Bloc<GameStatusEvent, GameStatusState> {
@@ -10,12 +13,42 @@ class GameStatusBloc extends Bloc<GameStatusEvent, GameStatusState> {
 
     on<ScoreEventAdd>(
       (event, emit) {
-        emit(state.copyWith(score: event.score + state.score));
+        final newScore = event.score + state.score;
+        final double reductionPercentage =
+            (newScore <= 100) ? (newScore / 100) * 60 : 60;
+
+        final int newPipeGap =
+            (Value.initialPipeGap * (100 - reductionPercentage) / 100).round();
+
+        emit(state.copyWith(
+          score: newScore,
+          pipeGap: newPipeGap,
+        ));
       },
     );
 
+    // on<StatusEventChange>((event, emit) {
+    //   emit(state.copyWith(status: event.status));
+    // });
+
     on<StatusEventChange>((event, emit) {
-      emit(state.copyWith(status: event.status));
+      GameStatusState newState;
+
+      if (event.status == GameStatus.play) {
+        log("message: play");
+        newState = state.copyWith(
+            score: 0, pipeGap: Value.initialPipeGap, status: event.status);
+      } else {
+        log("message: ${event.status.name}");
+        newState = state.copyWith(status: event.status);
+      }
+
+      emit(newState);
+      // emit(state.copyWith(status: event.status));
+    });
+
+    on<TestEvent>((event, emit) {
+      emit(state.copyWith(pipeGap: event.pipeGap));
     });
   }
 }

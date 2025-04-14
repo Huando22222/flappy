@@ -1,10 +1,11 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flame_bloc/flame_bloc.dart';
-import 'package:flappy/bloc/game_status_bloc.dart';
+import 'package:flappy/bloc/game_status_event.dart';
 import 'package:flappy/bloc/game_status_state.dart';
+import 'package:flappy/component/audio_manager.dart';
 import 'package:flappy/component/ground.dart';
 import 'package:flappy/component/pipe.dart';
 import 'package:flappy/game_play.dart';
@@ -17,7 +18,9 @@ class Player extends
   Player()
       : super(
           position: Vector2(100, 100),
-        );
+        ) {
+    log("create player");
+  }
 
   double velocity = 0.0;
   final double gravity = Value.gravity;
@@ -25,20 +28,28 @@ class Player extends
 
   @override
   FutureOr<void> onLoad() async {
-    if (game.gameStatusBloc.state.gameMode == GameMode.normal) {
+    if (game.gameStatusBloc.state.gameMode == GameMode.blueBird) {
       animation = await game.loadSpriteAnimation(
-        'animated_bird.png',
+        'players/animated_bluebird_21x12.png',
         SpriteAnimationData.sequenced(
           amount: 3,
           stepTime: 0.1,
-          textureSize: Vector2(34, 24),
+          textureSize: Vector2(17, 12),
         ),
       );
+      // animation = await game.loadSpriteAnimation(
+      //   'players/animated_bird.png',
+      //   SpriteAnimationData.sequenced(
+      //     amount: 3,
+      //     stepTime: 0.1,
+      //     textureSize: Vector2(34, 24),
+      //   ),
+      // );
 
       add(CircleHitbox());
     } else {
       animation = await game.loadSpriteAnimation(
-        'player2.png',
+        'players/player2.png',
         SpriteAnimationData.sequenced(
           amount: 1,
           stepTime: 1,
@@ -89,11 +100,19 @@ class Player extends
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     if (other is Ground) {
-      game.gameOver();
+      // game.gameOver();
+      game.audioManager.playSfx(key: AudioKey.hit);
+      game.audioManager.playSfx(key: AudioKey.die);
+      log('hit Ground');
+      game.gameStatusBloc.add(StatusEventChange(status: GameStatus.gameOver));
     }
 
     if (other is Pipe) {
-      game.gameOver();
+      game.audioManager.playSfx(key: AudioKey.hit);
+      game.audioManager.playSfx(key: AudioKey.die);
+      log('hit pipe');
+      // game.gameOver();
+      game.gameStatusBloc.add(StatusEventChange(status: GameStatus.gameOver));
     }
     super.onCollision(intersectionPoints, other);
   }
