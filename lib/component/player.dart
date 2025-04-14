@@ -28,23 +28,27 @@ class Player extends
 
   @override
   FutureOr<void> onLoad() async {
-    if (game.gameStatusBloc.state.gameMode == GameMode.blueBird) {
+    final gameMode = game.gameStatusBloc.state.gameMode;
+    if (gameMode != GameMode.plane) {
+      String url;
+      if (gameMode == GameMode.blueBird) {
+        url = "animated_bluebird_51x12";
+      } else if (gameMode == GameMode.redBird) {
+        url = "animated_redbird_51x12";
+      } else if (gameMode == GameMode.yellowBird) {
+        url = "animated_yellowbird_51x12";
+      } else {
+        url = "animated_bluebird_51x12";
+      }
       animation = await game.loadSpriteAnimation(
-        'players/animated_bluebird_21x12.png',
+        'players/$url.png',
         SpriteAnimationData.sequenced(
           amount: 3,
           stepTime: 0.1,
           textureSize: Vector2(17, 12),
         ),
       );
-      // animation = await game.loadSpriteAnimation(
-      //   'players/animated_bird.png',
-      //   SpriteAnimationData.sequenced(
-      //     amount: 3,
-      //     stepTime: 0.1,
-      //     textureSize: Vector2(34, 24),
-      //   ),
-      // );
+      scale = Vector2(2, 2);
 
       add(CircleHitbox());
     } else {
@@ -100,18 +104,14 @@ class Player extends
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     if (other is Ground) {
-      // game.gameOver();
       game.audioManager.playSfx(key: AudioKey.hit);
       game.audioManager.playSfx(key: AudioKey.die);
-      log('hit Ground');
       game.gameStatusBloc.add(StatusEventChange(status: GameStatus.gameOver));
     }
 
     if (other is Pipe) {
       game.audioManager.playSfx(key: AudioKey.hit);
       game.audioManager.playSfx(key: AudioKey.die);
-      log('hit pipe');
-      // game.gameOver();
       game.gameStatusBloc.add(StatusEventChange(status: GameStatus.gameOver));
     }
     super.onCollision(intersectionPoints, other);

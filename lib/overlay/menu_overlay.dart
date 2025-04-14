@@ -4,6 +4,7 @@ import 'dart:math' show pi;
 import 'package:flappy/bloc/game_status_bloc.dart';
 import 'package:flappy/bloc/game_status_event.dart';
 import 'package:flappy/bloc/game_status_state.dart';
+import 'package:flappy/component/audio_manager.dart';
 import 'package:flappy/game_play.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,6 +21,18 @@ class MenuOverlay extends StatelessWidget {
       color: Colors.transparent,
       child: BlocBuilder<GameStatusBloc, GameStatusState>(
         builder: (context, state) {
+          String url;
+          if (state.gameMode == GameMode.blueBird) {
+            url = "animated_bluebird_51x12";
+          } else if (state.gameMode == GameMode.redBird) {
+            url = "animated_redbird_51x12";
+          } else if (state.gameMode == GameMode.yellowBird) {
+            url = "animated_yellowbird_51x12";
+          } else if (state.gameMode == GameMode.plane) {
+            url = "player2";
+          } else {
+            url = "animated_bluebird_51x12";
+          }
           return Container(
             alignment: Alignment.center,
             decoration: const BoxDecoration(color: Colors.black54),
@@ -40,9 +53,16 @@ class MenuOverlay extends StatelessWidget {
                     children: [
                       GestureDetector(
                         onTap: () {
+                          final current =
+                              context.read<GameStatusBloc>().state.gameMode;
+                          final modes = GameMode.values;
+                          final prevIndex =
+                              (current.index - 1 + modes.length) % modes.length;
+                          final prevMode = modes[prevIndex];
                           context
                               .read<GameStatusBloc>()
-                              .add(ModeEventChange(GameMode.blueBird));
+                              .add(ModeEventChange(prevMode));
+                          gameRef.audioManager.playSfx(key: AudioKey.click);
                         },
                         child: Transform(
                           transform: Matrix4.identity()..rotateY(pi),
@@ -57,23 +77,29 @@ class MenuOverlay extends StatelessWidget {
                       ),
                       if (state.gameMode == GameMode.plane)
                         Image.asset(
-                          "assets/images/players/player2.png",
+                          "assets/images/players/$url.png",
                           width: size.width * 0.4,
                           fit: BoxFit.fitWidth,
                         )
                       else
                         Sprite(
-                          scale: 2,
-                          size: Size(34, 24),
+                          scale: 4,
+                          size: Size(17, 12),
                           stepTime: 200,
                           amount: 3,
-                          imagePath: 'assets/images/players/animated_bird.png',
+                          imagePath: 'assets/images/players/$url.png',
                         ),
                       GestureDetector(
                         onTap: () {
+                          final current =
+                              context.read<GameStatusBloc>().state.gameMode;
+                          final modes = GameMode.values;
+                          final nextIndex = (current.index + 1) % modes.length;
+                          final nextMode = modes[nextIndex];
                           context
                               .read<GameStatusBloc>()
-                              .add(ModeEventChange(GameMode.plane));
+                              .add(ModeEventChange(nextMode));
+                          gameRef.audioManager.playSfx(key: AudioKey.click);
                         },
                         child: Image.asset(
                           "assets/images/arrow_forward_icon.png",
@@ -87,10 +113,10 @@ class MenuOverlay extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    // gameRef.overlays.remove('menu');
                     context
                         .read<GameStatusBloc>()
                         .add(StatusEventChange(status: GameStatus.play));
+                    gameRef.audioManager.playSfx(key: AudioKey.start);
                   },
                   child: Image.asset(
                     "assets/images/play_icon.png",

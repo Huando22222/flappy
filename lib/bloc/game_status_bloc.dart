@@ -27,10 +27,6 @@ class GameStatusBloc extends Bloc<GameStatusEvent, GameStatusState> {
       },
     );
 
-    // on<StatusEventChange>((event, emit) {
-    //   emit(state.copyWith(status: event.status));
-    // });
-
     on<StatusEventChange>((event, emit) {
       GameStatusState newState;
 
@@ -44,7 +40,6 @@ class GameStatusBloc extends Bloc<GameStatusEvent, GameStatusState> {
       }
 
       emit(newState);
-      // emit(state.copyWith(status: event.status));
     });
 
     on<TestEvent>((event, emit) {
